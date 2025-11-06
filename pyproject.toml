@@ -1,13 +1,18 @@
 [tool.poetry]
 name = "edgelab"
-version = "0.1.0"
+version = "0.1.4"
 description = "EdgeLab CLI - Algorithmic trading strategy analysis platform"
 authors = ["EdgeLab Team"]
 readme = "README.md"
 license = "MIT"
 homepage = "https://edgelab.com"
-repository = "https://github.com/yourusername/edgelab-cli"
-keywords = ["trading", "backtesting", "algorithmic-trading", "quantitative-finance"]
+repository = "https://github.com/karthik446/edgelab-cli"
+keywords = [
+    "trading",
+    "backtesting",
+    "algorithmic-trading",
+    "quantitative-finance",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

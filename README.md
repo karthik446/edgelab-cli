@@ -11,10 +11,10 @@ EdgeLab CLI is a Python package for developing, testing, and analyzing algorithm
 pip install edgelab
 
 # Sign up
-edgelab signup
+edgelab auth signup
 
 # Login
-edgelab login
+edgelab auth login
 
 # Create workspace
 edgelab init my-strategies
@@ -49,16 +49,16 @@ pip install edgelab
 
 ```bash
 # Create account
-edgelab signup
+edgelab auth signup
 
 # Login
-edgelab login
+edgelab auth login
 
 # Check status
-edgelab whoami
+edgelab auth whoami
 
 # Logout
-edgelab logout
+edgelab auth logout
 ```
 
 ### Workspace
