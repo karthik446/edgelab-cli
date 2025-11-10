@@ -1,5 +1,6 @@
 """Strategy analysis command."""
 
+import json
 import sys
 import hashlib
 import time
@@ -68,6 +69,17 @@ def cmd_analyze(
         console.print()
         sys.exit(1)
 
+    # Extract required indicators from strategy code
+    try:
+        from edgelab.utils.indicator_extractor import extract_indicators_from_code
+        
+        required_indicators = extract_indicators_from_code(strategy_code)
+        required_indicators_dict = required_indicators if required_indicators else None
+    except Exception as e:
+        console.print(f"[yellow]⚠️  Warning: Failed to extract indicators: {e}[/yellow]")
+        console.print("[dim]Continuing without indicator extraction...[/dim]")
+        required_indicators_dict = None
+
     # Calculate hash
     code_hash = hashlib.sha256(strategy_code.encode()).hexdigest()
 
@@ -102,20 +114,28 @@ def cmd_analyze(
 
     try:
         client = EdgeLabClient()
+        
+        # Build request payload
+        payload = {
+            "strategy_code": strategy_code,
+            "strategy_name": strategy_name,
+            "strategy_version": strategy_version,
+            "code_hash": code_hash,
+            "symbols": symbol_list,
+            "start_date": start_date,
+            "end_date": end_date,
+            "asset_type": asset_type,
+            "resolution": resolution,
+            "ml_enabled": ml,
+        }
+        
+        # Add required_indicators if extracted
+        if required_indicators_dict:
+            payload["required_indicators"] = required_indicators_dict
+        
         response = client.post(
             "/api/v1/edgelab/analysis",
-            data={
-                "strategy_code": strategy_code,
-                "strategy_name": strategy_name,
-                "strategy_version": strategy_version,
-                "code_hash": code_hash,
-                "symbols": symbol_list,
-                "start_date": start_date,
-                "end_date": end_date,
-                "asset_type": asset_type,
-                "resolution": resolution,
-                "ml_enabled": ml,
-            },
+            data=payload,
             authenticated=True,
         )
 

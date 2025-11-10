@@ -169,12 +169,13 @@ def whoami():
     help="""
     [bold]Initialize a new EdgeLab workspace.[/bold]
 
-    Creates a new workspace with example strategies to get you started.
+    Creates a new workspace with system templates from marketplace.
+    Requires authentication - please login first with 'edgelab auth login'.
     """
 )
 @click.argument("folder", type=str)
 def init(folder: str):
-    """Initialize workspace with example strategies."""
+    """Initialize workspace with system templates from marketplace."""
     from edgelab.commands.workspace import cmd_init
 
     cmd_init(folder)
@@ -283,6 +284,55 @@ def strategies_list():
 def show(name: str, version: str):
     """Show strategy details."""
     console.print(f"[yellow]⚠️  Coming soon![/yellow] Show strategy: {name} {version}")
+
+
+@main.group(
+    help="""
+    [bold]Browse and manage public strategies marketplace.[/bold]
+
+    Discover, clone, and fork public trading strategies.
+    """
+)
+def marketplace():
+    """Marketplace commands."""
+    pass
+
+
+@marketplace.command(name="list")
+@click.option(
+    "--sort",
+    type=click.Choice(["sharpe", "return", "clones", "recent"]),
+    default="sharpe",
+    help="Sort order (default: sharpe)",
+)
+@click.option("--tags", type=str, help="Comma-separated tags to filter by")
+@click.option("--min-sharpe", type=float, help="Minimum Sharpe ratio filter")
+@click.option("--max-drawdown", type=float, help="Maximum drawdown filter")
+def marketplace_list(sort: str, tags: str, min_sharpe: float, max_drawdown: float):
+    """List public strategies in marketplace."""
+    from edgelab.commands.marketplace.list import cmd_marketplace_list
+
+    cmd_marketplace_list(sort=sort, tags=tags, min_sharpe=min_sharpe, max_drawdown=max_drawdown)
+
+
+@marketplace.command()
+@click.argument("strategy-id", type=str)
+def show(strategy_id: str):
+    """Show detailed strategy information."""
+    from edgelab.commands.marketplace.show import cmd_marketplace_show
+
+    cmd_marketplace_show(strategy_id)
+
+
+@marketplace.command()
+@click.argument("strategy-id", type=str)
+@click.option("--name", type=str, required=True, help="Name for forked strategy")
+@click.option("--description", type=str, help="Description for forked strategy")
+def fork(strategy_id: str, name: str, description: str):
+    """Fork a public strategy with modifications."""
+    from edgelab.commands.marketplace.fork import cmd_marketplace_fork
+
+    cmd_marketplace_fork(strategy_id, name, description)
 
 
 if __name__ == "__main__":

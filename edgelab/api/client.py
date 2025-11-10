@@ -180,3 +180,22 @@ class EdgeLabClient:
             raise NetworkError(f"Connection failed: {e}")
         except requests.exceptions.Timeout as e:
             raise NetworkError(f"Request timeout: {e}")
+
+    def get_strategy_code(self, strategy_id: str) -> str:
+        """Fetch public strategy code from marketplace.
+
+        Args:
+            strategy_id: Strategy UUID
+
+        Returns:
+            Strategy code as string
+
+        Raises:
+            EdgeLabAPIError: If fetch fails
+        """
+        response = self.get(
+            f"/api/v1/edgelab/marketplace/strategies/{strategy_id}/code",
+            authenticated=True,
+        )
+        # Response format: {"code": "..."}
+        return response.get("code") or ""

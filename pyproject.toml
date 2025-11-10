@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "edgelab"
-version = "0.1.4"
+version = "0.1.5"
 description = "EdgeLab CLI - Algorithmic trading strategy analysis platform"
 authors = ["EdgeLab Team"]
 readme = "README.md"
